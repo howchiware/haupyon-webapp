@@ -86,7 +86,7 @@ String[] cc = {"B-3", "B-4", "E-6", "E-7", "H-2", "H-3"};
 			</table>
 
 
-			<table class="\table">
+			<table class="table">
 				<tr align="right">
 					<td>
 						<button type="button" class="btn" onclick="sendOk();">좌석예약</button>
@@ -108,7 +108,8 @@ String[] cc = {"B-3", "B-4", "E-6", "E-7", "H-2", "H-3"};
 				return;
 			}
 			
-			alert(chkELS.length + ' 좌석 예약..');
+			f.action = 'QUIZ01_A_ok.jsp';
+			f.submit();
 			
 		}
 	</script>
