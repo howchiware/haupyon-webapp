@@ -153,7 +153,7 @@ window.addEventListener('DOMContentLoaded', function(){
 
 <div class="calendar">
 	<div class="title">
-		<form name="calendarForm" action="calendar4.jsp" method="post">
+		<form name="calendarForm" action="calendar3.jsp" method="post">
 			<select name="year" id="year" class="form-select" onchange="change();">
 				<% for(int i=year-5;i<=year+5; i++) { %>
 					<option value="<%=i%>" <%=year==i ? "selected ":"" %>><%=i%> 년</option>
@@ -251,7 +251,7 @@ window.addEventListener('DOMContentLoaded', function(){
 	</table>
 	
 	<div class="footer">
-		<a href="calendar4.jsp">오늘날짜로</a>
+		<a href="calendar3.jsp">오늘날짜로</a>
 	</div>
 	
 </div>
