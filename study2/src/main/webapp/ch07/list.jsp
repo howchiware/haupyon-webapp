@@ -26,7 +26,8 @@
 	}
 	
 	String listUrl = "list.jsp";
-	String paging = util.paging(current_page, total_page, listUrl);
+	// String paging = util.paging(current_page, total_page, listUrl);
+	String paging = util.paging2(current_page, total_page, listUrl);
 	
 	pageContext.setAttribute("paging", paging);
 	
@@ -61,7 +62,7 @@ body {
 }
 
 .paginate {
-	font-size: 14px;
+	font-size: 30px;
 	text-align: center;
 }
 
