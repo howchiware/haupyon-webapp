@@ -134,10 +134,9 @@ input[type=checkbox], input[type=radio] { vertical-align: middle; }
 
 <div class="calendar">
 	<div class="title">
-		<!--<a href="#">&lt;</a>   EL 작성해서 변경하기 -->
-		<a href="calendar.jsp?year=${year }&month=${month-1 }">&lt;</a>
+		<a href="calendar_el+jstl.jsp?year=${year }&month=${month-1 }">&lt;</a>
 		<label>${year }年 ${month }月</label>
-		<a href="calendar.jsp?year=${ty }&month=${tm+1 }">&gt;</a>
+		<a href="calendar_el+jstl.jsp?year=${year }&month=${month+1 }">&gt;</a>
 		
 	</div>
 
@@ -153,21 +152,45 @@ input[type=checkbox], input[type=radio] { vertical-align: middle; }
 				<td>토</td>
 			</tr>
 		</thead>
-		<tbody><!--  JSTL + EL-->
-			<c:forEach var="i" begin="1" end="${lastDate }">
-				<c:if test="${not empty ty }">
-					<c:set var="cls" value="${year}==${ty} && ${i} == ${td} ? ${today } : ${'' }"/>
-				</c:if>
-				<td class=${cls }>${i }</td>
-				
-							
-					
+		<tbody>
+			<!-- 1일 앞부분 -->
+			<tr>
+			<c:forEach var="i" begin="1" end="${week-1}">
+				<td class='gray'>${preDate + i -1}</td>
 			</c:forEach>
+
+		
+			<!-- 1일~말일 -->
+			<c:forEach var="i" begin="1" end="${lastDate}">
+				<c:if test="${not empty ty}">
+					<c:set var="cls" value="${year == ty && month == tm && i == td ? 'today' : ''}"/>
+				</c:if>
+				
+				<td class="${cls}">${i}</td>
+				
+				<c:set var="weekIndex" value="${i != lastDate && (week + i - 1) % 7 == 0}" />
+				<c:if test="${weekIndex}">
+					<c:out value="</tr><tr>" escapeXml="false"/>
+				</c:if>
+			</c:forEach>
+			
+
+			<!-- 다음 달 -->
+			<c:set var="endDay" value="${(week + lastDate -1 )% 7}" />
+			<c:if test="${ endDay != 0 }">
+				<c:forEach var="i" begin="1" end="${7-endDay}">
+					<td class='gray'>${i}</td>
+				</c:forEach>
+			</c:if>
+			</tr>
+			
+
+			
 		</tbody>
 	</table>
 	
 	<div class="footer">
-		<a href="calendar.jsp">오늘날짜로</a>
+		<a href="calendar_el+jstl.jsp">오늘날짜로</a>
 	</div>
 	
 </div>
