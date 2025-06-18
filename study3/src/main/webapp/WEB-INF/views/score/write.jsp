@@ -93,7 +93,42 @@ function check() {
 	
 	const f = document.scoreForm;
 	
-	f.action = '${pageContext.request.contextPath}/score/write.do';
+	// 유효성 검사
+	
+	let p;
+
+	p = /^\d{4,6}$/;
+	if(! p.test(f.hak.value)) {
+		f.hak.focus();
+		return false;
+	}
+
+	if(! f.birth.value) {
+		f.birth.focus();
+		return false;
+	}
+	
+	p = /^[가-힣]{2,6}$/;
+	if(! p.test(f.name.value)) {
+		f.name.focus();
+		return false;
+	}
+	
+	p = /^\d{1,2}$|^(100)$/;
+	if(! p.test(f.kor.value)) {
+		f.kor.focus();
+		return false;
+	}
+	if(! p.test(f.eng.value)) {
+		f.eng.focus();
+		return false;
+	}
+	if(! p.test(f.mat.value)) {
+		f.mat.focus();
+		return false;
+	}
+	
+	f.action = '${pageContext.request.contextPath}/score/${mode}.do';
 	
 	return true;
 }
@@ -124,54 +159,60 @@ window.addEventListener('load', () => {
 		<tr>
 			<td>학 번</td>
 			<td>
-				<input type="text" name="hak" class="form-control" maxlength="10">
+				<input type="text" name="hak" class="form-control" value="${dto.hak}" ${mode=="update"?"readonly":""}>
 			</td>
 		</tr>
 		
 		<tr>
 			<td>이 름</td>
 			<td>
-				<input type="text" name="name" class="form-control" maxlength="10">
+				<input type="text" name="name" class="form-control" value="${dto.name}">
 			</td>
 		</tr>
 		
 		<tr>
 			<td>생년월일</td>
 			<td>
-				<input type="date" name="birth" class="form-control" maxlength="10">
+				<input type="date" name="birth" class="form-control" value="${dto.birth}">
 			</td>
 		</tr>
 		
 		<tr>
 			<td>국 어</td>
 			<td>
-				<input type="text" name="kor" class="form-control" maxlength="3">
+				<input type="text" name="kor" class="form-control" value="${dto.kor}">
 			</td>
 		</tr>
 		
 		<tr>
 			<td>영 어</td>
 			<td>
-				<input type="text" name="eng" class="form-control" maxlength="3">
+				<input type="text" name="eng" class="form-control" value="${dto.eng}">
 			</td>
 		</tr>
 		
 		<tr>
 			<td>수 학</td>
 			<td>
-				<input type="text" name="mat" class="form-control" maxlength="3">
+				<input type="text" name="mat" class="form-control" value="${dto.eng}">
 			</td>
 		</tr>
 		</table>
 		
 		<table class="table">
 		<tr>
-			<td align="center" colspan="2">
-				<button type="submit" class="btn"> 등록완료 </button> 
+			<td align="center">
+				<button type="submit" class="btn"> ${mode=="write"?"등록완료":"수정완료"} </button> 
 				<button type="reset" class="btn"> 다시입력 </button>
 				<button type="button" class="btn"
-					onclick="javascript:location.href='${pageContext.request.contextPath}/score/list.do';"> 등록취소 </button>
+					onclick="javascript:location.href='${pageContext.request.contextPath}/score/list.do';"> ${mode=="write"?"등록취소":"수정취소"} </button>
+				<c:if test="${mode=='update'}"> 
+					<input type="hidden" name="page" value="${page}">
+				</c:if>
 			</td>
+		</tr>
+		<tr>
+			<td align="center">${message}</td>
 		</tr>
 		</table>
 	</form>

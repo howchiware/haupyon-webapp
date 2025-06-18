@@ -82,7 +82,7 @@ public class MyUtil {
 		
 		StringBuffer sb = new StringBuffer();
 		
-		int numPerBlock = 10;
+		int numPerBlock = 5;
 		int currentPageSetup;
 		int n, page;
 		
@@ -130,13 +130,46 @@ public class MyUtil {
 		}
 		*/
 		
-		sb.append("<a href=''>▶</a>");
-		page = 1;
-		while(true) {
+		
+
+		
+		
+		n = current_page + numPerBlock; // 현재 표시되는 페이지 번호 + 블록개수
+		
+		// 다음 페이지로 넘어가기
+		sb.append("<a href='" + list_url + "page=" + (current_page+1) + "'>▶</a>");
+		
+		page = currentPageSetup + 1;
+		while(page <= total_page && page <= (currentPageSetup + numPerBlock)) {
+			if(page == current_page) { 
+				sb.append("<span>" + page + "</span>");
+			} else {
+				sb.append("<a href='" + list_url + "page=" + page + "'>" + page + "</a>");
+			}
 			
+
+			page++;
 		}
- 		
-		sb.append("<a href=''>◀</a>");
+
+		for(int i = total_page; i <= 1; i--) {
+			if(i == current_page) {
+				sb.append("<span>" + page + "</span>");
+			} else  {
+				sb.append("<a href='" + list_url + "page=" + total_page + "'>" + total_page + "</a>");
+			}
+		}
+		
+
+
+		
+		
+		if(current_page == 1) {
+			sb.append("<a href='" + list_url + "page=" + total_page + "'>◀</a>");
+		} else {
+			sb.append("<a href='" + list_url + "page=" + (current_page-1) + "'>◀</a>");
+		}
+		
+		
 		
 		
 		sb.append("</div>");

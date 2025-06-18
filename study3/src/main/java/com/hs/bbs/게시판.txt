@@ -1,0 +1,113 @@
+--※ 서블릿 게시판 작성
+-- varchar2 최대 글자는 4000
+-- 그 이상으로 하려면 CLOB
+-- -------------------------------------------
+-- 게시판 테이블
+CREATE TABLE bbs (
+    num NUMBER NOT NULL,
+    name VARCHAR2(30) NOT NULL,
+    pwd VARCHAR2(50) NOT NULL,
+    subject VARCHAR2(300) NOT NULL,
+    content VARCHAR2(4000) NOT NULL, 
+    ipAddr VARCHAR2(50) NOT NULL,
+    hitCount NUMBER DEFAULT 0,
+    reg_date DATE DEFAULT SYSDATE,
+    PRIMARY KEY(num)
+);
+
+SELECT * FROM tab;
+
+DESC bbs;
+
+-- 시퀀스 작성
+CREATE SEQUENCE bbs_seq
+INCREMENT BY 1
+START WITH 1
+NOMAXVALUE
+NOCYCLE
+NOCACHE;
+
+SELECT * FROM seq;
+
+
+---------------------------------
+
+URI 및 JSP
+
+1. 글리스트(method: GET)
+	uri: /cp/bbs/list.do
+	jsp: /WEB-INF/views/bbs/list.jsp
+	
+2. 글쓰기 폼(method: GET)
+	uri: /cp/bbs/write.do
+	jsp: /WEB-INF/views/bbs/write.jsp
+
+3. 글 등록(method: POST)
+	uri: /cp/bbs/write.do , DB 테이블에 저장 -> list.do로 리다이렉트
+	
+4. 글보기(method: GET)
+	uri: /cp/bbs/article.do
+	jsp: /WEB-INF/views/bbs/article.jsp
+	
+5. 글수정 폼(method: GET)
+	uri: /cp/bbs/update.do
+	jsp: /WEB-INF/views/bbs/write.jsp
+
+6. 글 수정완료(method: POST)
+	uri: /cp/bbs/update.do  , DB 테이블 내용 수정 -> list.do로 리다이렉트
+
+7. 글삭제(method: GET)
+	uri: /cp/bbs/delete.do  , DB 테이블 내용 삭제 -> list.do로 리다이렉트
+
+
+---------------------------------------
+-- JSP 화면 디자인
+
+
+---------------------------------------
+-- 서블릿 기본 코드, DTO, DAO 작성
+	INSERT 부터 작성
+	
+	
+------------------------------------------------------------------------------
+-- 흐름도 및 파라미터
+1. 글 리스트
+   
+   - 글 리스트 --> 글 리스트: 페이지번호클릭(페이지번호 [, 검색 컬럼, 검색값])
+   - 글 리스트 --> 글 리스트: 검색 클릭(검색 컬럼, 검색값)
+   - 글 리스트 --> 글 리스트: 초기화(검색 해제)
+   - 글 리스트 --> 글쓰기 폼: 등록하기 버튼
+   - 글 리스트 --> 글보기: 글 제목 클릭(글번호, 페이지번호 [, 검색 컬럼, 검색값])
+
+
+2. 글쓰기 폼
+   - 글쓰기 폼 --> 글 저장: 테이블에 게시글을 저장 ->글 리스트로 리다이렉트
+              |
+             폼 데이터: 제목, 작성자, 내용, 패스워드    
+   - 글쓰기 폼 --> 등록 취소: 글 리스트 복귀 
+
+
+3. 글 보기
+   - 넘겨받은 파라미터
+     글번호, 페이지번호 [, 검색 컬럼, 검색값]
+   
+   - 글 보기 --> 글 리스트: 리스트 버튼(페이지 번호 [, 검색 컬럼, 검색값])
+   - 글 보기 --> 글 보기: 이전 / 다음글(이전/다음 글 번호, 페이지 번호 [, 검색 컬럼, 검색값])
+   - 글 보기 --> 글 수정 폼: 글 수정 버튼(글 번호, 페이지번호)
+   - 글 보기 --> 글 삭제: 글 삭제 버튼(글 번호, 페이지번호, [, 검색 컬럼, 검색값])
+
+
+4. 글수정 폼
+   - 넘겨받은 파라미터
+     글 번호, 페이지 번호
+   - 글수정 폼 --> 수정 완료: 해당 게시글을 테이블에서 수정 --> 글 리스트(페이지 번호)
+              |
+             폼 데이터: 제목, 내용, 작성자, 패스워드, 글 번호, 페이지 번호
+   - 글수정 폼 --> 수정 취소: 글 리스트
+
+
+5. 글 삭제
+   - 넘겨받은 파라미터 
+     글 번호, 페이지 번호 [, 검색 컬럼, 검색값]
+
+   - 테이블의 해당 게시글 삭제 --> 글 리스트로 리다이렉트(페이지 번호[, 검색 컬럼, 검색값])

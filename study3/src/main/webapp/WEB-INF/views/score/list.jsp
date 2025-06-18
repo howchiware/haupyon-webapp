@@ -118,12 +118,64 @@ input[type=checkbox], input[type=radio] { vertical-align: middle; }
 
 <script type="text/javascript">
 function updateScore(hak) {
+	let url = '${pageContext.request.contextPath}/score/update.do';
+	let params = 'hak=' + hak + '&page=${page}';
 	
+	url += '?' + params;
+	
+	location.href = url;
 }
 
 function deleteScore(hak) {
+	if( confirm('학생 정보를 삭제 하시겠습니까 ? ')) {
+		let url = '${pageContext.request.contextPath}/score/delete.do';
+		let params = 'hak=' + hak + '&page=${page}';
+		
+		url += '?' + params;
+		location.href = url;
+	}
 	
 }
+
+function deleteList() {
+	const f = document.listForm;
+	
+	let cnt = f.querySelectorAll('input[name=haks]:checked').length;
+	
+	if(cnt === 0) {
+		alert('삭제할 학생을 먼저 선택하세요');
+		return;
+	}
+	
+	if(! confirm('선택된 자료를 삭제하시겠습니까?')) {
+		return;
+	}
+	
+	
+	f.action = '${pageContext.request.contextPath}/score/deleteList.do';
+	f.submit();
+	
+
+}
+
+window.addEventListener('DOMContentLoaded', evt => {
+	
+	const chkAllEL = document.getElementById('chkAll');
+	const inputELS = document.querySelectorAll('form input[name=haks]');
+	
+	chkAllEL.addEventListener('click', e => {
+		inputELS.forEach( el => el.checked = chkAllEL.checked );
+	});
+	
+	// 체크박스가 하나라도 해제되면 전체 선택 해제
+	for(let el of inputELS) {
+		el.addEventListener('click', e => {
+			let chkELS = document.querySelectorAll('form input[name=haks]:checked');
+			chkAllEL.checked = inputELS.length === chkELS.length; // 선택된 개수가 같을 때만 chkAllEL.checked 적용
+		});
+	}
+	
+});
 </script>
 
 </head>
@@ -137,75 +189,72 @@ function deleteScore(hak) {
 	<table class="table">
 		<tr>
 			<td align="left" width="50%">
-				<button type="button" class="btn">삭제</button>
+				<button type="button" class="btn" onclick="deleteList()">삭제</button>
 			</td>
 			<td align="right">
-				1개(1/1 페이지)
+				${dataCount}개(${page}/${total_page}페이지)
 			</td>
 		</tr>
 	</table>
 		
 	<form method="post" name="listForm">
-	<table class="table table-list">
-		<thead>
-			<tr>
-				<th width="35">
-					<input type="checkbox" name="chkAll" value="all">
-				</th>
-				<th width="70">학번</th>
-				<th width="100">이름</th>
-				<th width="100">생년월일</th>
-				<th width="60">국어</th>
-				<th width="60">영어</th>
-				<th width="60">수학</th>
-				<th width="60">총점</th>
-				<th width="60">평균</th>
-				<th>변경</th>
-			</tr>
-		</thead>
-
-		<tbody>
-			<tr>
-				<td>
-					<input type="checkbox" name="haks" value="1001">
-				</td>
-				<td>1001</td>
-				<td>홍길동</td>
-				<td>2000-10-10</td>
-				<td>80</td>
-				<td>90</td>
-				<td>100</td>
-				<td>270</td>
-				<td>90</td>
-				<td>
-					<button type="button" onclick="updateScore('1001')" class="btn">수정</button>
-					<button type="button" onclick="deleteScore('1001')" class="btn">삭제</button>
-				</td>
-			</tr>
-		</tbody>
-
-	</table>
+		<table class="table table-list">
+			<thead>
+				<tr>
+					<th width="35">
+						<input type="checkbox" name="chkAll" id="chkAll" value="all">
+						<input type="hidden" name="page" value="${page}">
+					</th>
+					<th width="70">학번</th>
+					<th width="100">이름</th>
+					<th width="100">생년월일</th>
+					<th width="60">국어</th>
+					<th width="60">영어</th>
+					<th width="60">수학</th>
+					<th width="60">총점</th>
+					<th width="60">평균</th>
+					<th>변경</th>
+				</tr>
+			</thead>
+	
+			<tbody>
+				<c:forEach var="dto" items="${list}"> <!-- list는 컬렉션 -->
+	
+					<tr>
+						<td>
+							<input type="checkbox" name="haks" value="${dto.hak}"> <!-- hak이 기본키라서 -->
+						</td>
+						<td>${dto.hak}</td>
+						<td>${dto.name}</td>
+						<td>${dto.birth}</td>
+						<td>${dto.kor}</td>
+						<td>${dto.eng}</td>
+						<td>${dto.mat}</td>
+						<td>${dto.tot}</td>
+						<td>${dto.ave}</td>
+						<td>
+							<button type="button" onclick="updateScore('${dto.hak}')" class="btn">수정</button>
+							<button type="button" onclick="deleteScore('${dto.hak}')" class="btn">삭제</button>
+						</td>
+					</tr>
+				
+				</c:forEach>
+			</tbody>
+	
+		</table>
 	</form>
 	
 	<div class="page-navigation">
-		1 2 3
+		${dataCount == 0 ? "등록된 정보가 없습니다." : paging }
 	</div>
 	
 	<table class="table">
 		<tr>
 			<td width="100">
-				<button type="button" class="btn" onclick="location.href='${pageContext.request.contextPath}';">새로고침</button>
+				&nbsp;
 			</td>
 			<td align="center">
-				<form name="searchForm" action="" method="post">
-					<select name="schType" class="form-select">
-						<option value="hak">학번</option>
-						<option value="name">이름</option>
-						<option value="birth">생년월일</option>
-					</select>
-					<input type="text" name="kwd" value="" class="form-control">
-					<button type="button" class="btn">검색</button>
-				</form>
+				&nbsp;
 			</td>
 			<td align="right" width="100">
 				<button type="button" class="btn" onclick="location.href='${pageContext.request.contextPath}/score/write.do';">학생등록</button>

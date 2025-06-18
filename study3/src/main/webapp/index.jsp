@@ -16,5 +16,9 @@
 		<a href="${pageContext.request.contextPath}/score/list.do">성적 처리</a>
 	</p>
 
+	<p>
+		<a href="${pageContext.request.contextPath}/bbs/list.do">게시판</a>
+	</p>
+
 </body>
 </html>
