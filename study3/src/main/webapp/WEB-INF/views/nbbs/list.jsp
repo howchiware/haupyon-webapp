@@ -122,46 +122,40 @@ input[type=checkbox], input[type=radio] { vertical-align: middle; }
 }
 </style>
 
-<script type="text/javascript">
+<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/paginate.js"></script>
 
-// 검색키워드 입력란에서 엔터를 누른 경우 서버전송 막기
+<script type="text/javascript">
+// 검색키워드 입력란에서 엔터를 누른경우 서버전송 막기
 window.addEventListener('DOMContentLoaded', () => {
-	
 	const inputEL = document.querySelector('form input[name=kwd]');
-	
-	inputEL.addEventListener('keydown', function(evt) {
+	inputEL.addEventListener('keydown', function(evt){
 		if(evt.key === 'Enter') {
 			evt.preventDefault();
 			
 			searchList();
 		}
 	});
-	
 });
 
-
 function searchList() {
-	
 	const f = document.searchForm;
 	
 	if(! f.kwd.value.trim()) {
 		return;
 	}
 	
-	// FormData: key-value 값으로 저장하며, multipart/form-data 형식으로 데이터를 전송하도록 만들어짐
-	// URLSearchParams: URL 쿼리 문자열을 쉽게 다루기 위한 내장 객체
+	// FormData : 키-값으로 저장하며, multipart/form-data 형식으로 데이터를 전송하도록 만들어짐
+	// URLSearchParams : URL 쿼리문자열을 쉽게 다루기 위한 내장객체
 	
 	// form 요소를 FormData로 변환
 	const formData = new FormData(f);
-	
 	// FormData 객체를 URLSearchParams으로 변환
-	// 이름=값&이름=값 형식으로 변환되며, 한글 등은 인코딩 된다
+	// 이름=값&이름=값 형식으로 변환되며 한글등은 인코딩됨
 	let params = new URLSearchParams(formData).toString();
 	
-	let url = '${pageContext.request.contextPath}/bbs/list.do';
+	let url = '${pageContext.request.contextPath}/nbbs/list.do';
 	url += '?' + params;
 	location.href = url;
-		
 }
 
 </script>
@@ -175,7 +169,7 @@ function searchList() {
 
 	<table class="table">
 		<tr>
-			<td width="50%">${dataCount}개(${page}/${total_page}페이지)</td>
+			<td width="50%">${dataCount}개(${page}/${total_page} 페이지)</td>
 			<td align="right">&nbsp;</td>
 		</tr>
 	</table>
@@ -194,41 +188,43 @@ function searchList() {
 		<tbody>
 			<c:forEach var="dto" items="${list}" varStatus="status">
 				<tr>
-					<td>${dataCount-(page-1)*size-status.index}</td> <!-- 검색했을 때 6 5 4 3 2 1.... 몇번째 위치에 있는지 -->
-					<td><a href="${articleUrl}&num=${dto.num}">${dto.subject}</a></td>
+					<td>${dataCount-(page-1)*size-status.index}</td>
+					<td>
+						<a href="#">${dto.subject}</a>
+					</td>
 					<td>${dto.name}</td>
 					<td>${dto.reg_date}</td>
 					<td>${dto.hitCount}</td>
 				</tr>
-			</c:forEach>
+			</c:forEach>	
 		<tbody>
 		
 	</table>
 	
 	<div class="page-navigation">
-		${dataCount == 0 ? "등록된 게시물이 없습니다" : paging}
+		${dataCount == 0 ? "등록된 게시물이 없습니다." : paging}
 	</div>
 	
 	<table class="table">
 		<tr>
 			<td width="100">
-				<button type="button" class="btn" onclick="location.href='${pageContext.request.contextPath}/bbs/list.do';">새로고침</button>
+				<button type="button" class="btn" onclick="location.href='${pageContext.request.contextPath}/nbbs/list.do';">새로고침</button>
 			</td>
 			<td align="center">
 				<form name="searchForm">
 					<select name="schType" class="form-select">
-						<option value="all" ${schType == "all" ? "selected" : "" }>제목+내용</option>
-						<option value="name" ${schType == "name" ? "selected" : "" }>작성자</option>
-						<option value="reg_date" ${schType == "reg_date" ? "selected" : "" }>등록일</option>
-						<option value="subject" ${schType == "subject" ? "selected" : "" }>제목</option>
-						<option value="content" ${schType == "content" ? "selected" : "" }>내용</option>
+						<option value="all" ${schType=="all"?"selected":""}>제목+내용</option>
+						<option value="name" ${schType=="name"?"selected":""}>작성자</option>
+						<option value="reg_date" ${schType=="reg_date"?"selected":""}>등록일</option>
+						<option value="subject" ${schType=="subject"?"selected":""}>제목</option>
+						<option value="content" ${schType=="content"?"selected":""}>내용</option>
 					</select>
 					<input type="text" name="kwd" value="${kwd}" class="form-control">
 					<button type="button" class="btn" onclick="searchList();">검색</button>
 				</form>
 			</td>
 			<td align="right" width="100">
-				<button type="button" class="btn" onclick="location.href='${pageContext.request.contextPath}/bbs/write.do'">글올리기</button>
+				<button type="button" class="btn" onclick="location.href='${pageContext.request.contextPath}/nbbs/write.do';">글올리기</button>
 			</td>
 		</tr>
 	</table>	

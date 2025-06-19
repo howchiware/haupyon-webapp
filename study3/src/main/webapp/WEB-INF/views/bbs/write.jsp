@@ -112,7 +112,7 @@ function sendOk() {
 		return;
 	}
 	
-	f.action = '${pageContext.request.contextPath}/bbs/write.do';
+	f.action = '${pageContext.request.contextPath}/bbs/${mode}.do';
 	f.submit();
 	
 }
@@ -131,28 +131,28 @@ function sendOk() {
 			<tr> 
 				<td>제&nbsp;&nbsp;&nbsp;&nbsp;목</td>
 				<td> 
-					<input type="text" name="subject" maxlength="100" class="form-control" value="">
+					<input type="text" name="subject" maxlength="100" class="form-control" value="${dto.subject}">
 				</td>
 			</tr>
 			
 			<tr> 
 				<td>작성자</td>
 				<td> 
-					<input type="text" name="name" maxlength="10" class="form-control" value="">
+					<input type="text" name="name" maxlength="10" class="form-control" value="${dto.name}">
 				</td>
 			</tr>
 			
 			<tr> 
 				<td>내&nbsp;&nbsp;&nbsp;&nbsp;용</td>
 				<td valign="top"> 
-					<textarea name="content" class="form-control"></textarea>
+					<textarea name="content" class="form-control">${dto.content}</textarea>
 				</td>
 			</tr>
 			
 			<tr>
 				<td>패스워드</td>
 				<td> 
-					<input type="password" name="pwd" maxlength="10" class="form-control">
+					<input type="password" name="pwd" maxlength="10" class="form-control"> <!-- 패스워는 value 주면 안된다 -->
 					(게시물 수정 및 삭제시 필요 !!!)
 				</td>
 			</tr>
@@ -161,9 +161,13 @@ function sendOk() {
 		<table class="table">
 			<tr> 
 				<td align="center">
-					<button type="button" class="btn" onclick="sendOk();">등록하기</button>
+					<button type="button" class="btn" onclick="sendOk();">${mode=="update"?"수정완료":"등록완료"}</button>
 					<button type="reset" class="btn">다시입력</button>
-					<button type="button" class="btn">등록취소</button>
+					<button type="button" class="btn" onclick="location.href='${pageContext.request.contextPath}/bbs/list.do';">${mode=="update"?"수정취소":"등록취소"}</button>
+					<c:if test="${mode=='update'}">
+						<input type="hidden" name="num" value="${dto.num}">
+						<input type="hidden" name="page" value="${page}">
+					</c:if>
 				</td>
 			</tr>
 		</table>

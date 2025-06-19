@@ -7,7 +7,6 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <link rel="icon" href="data:;base64,iVBORw0KGgo=">
-
 <style type="text/css">
 * { padding: 0; margin: 0; }
 *, *::after, *::before { box-sizing: border-box; }
@@ -83,21 +82,33 @@ input[type=checkbox], input[type=radio] { vertical-align: middle; }
 .table-article tr > td { padding-left: 5px; padding-right: 5px; }
 </style>
 
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.7.2/css/all.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/myModal.css">
+<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/myModal.js"></script>
+
 <script type="text/javascript">
-function deleteOk() {
-	if(confirm('게시글을 삭제 하시겠습니까? ')) {
-		let params = 'num=${dto.num}&${query}'; // query 안에는 page=? 의 정보만 들어갈 수 있다
-		let url = '${pageContext.request.contextPath}/bbs/delete.do';
-		
-		url += '?' + params;
-		location.href = url;
-		
+function pwdInputModal(mode) {
+	const titleEL = document.querySelector('.popup-body-title');
+	if(mode === 'update') {
+		titleEL.textContent = '데이터 수정';
+	} else if( mode === 'delete') {
+		titleEL.textContent = '데이터 삭제';
 	}
+	
+	const f = document.pwdForm;
+	f.mode.value = mode;
+	
+	modalOpen('.modal-container');
 }
 
-function updateOk() {
-	
-}
+window.addEventListener('load', e => {
+	const btnConfirm = document.querySelector('.modal-confirm');
+	btnConfirm.addEventListener('click', () => {
+		// 확인 버튼
+		
+		modalClose('.modal-container');
+	});
+});
 </script>
 
 </head>
@@ -109,7 +120,6 @@ function updateOk() {
 	</div>
 	
 	<table class="table table-border table-article">
-	
 		<thead>
 			<tr>
 				<td colspan="2" align="center">
@@ -138,7 +148,7 @@ function updateOk() {
 				<td colspan="2">
 					이전글 : 
 					<c:if test="${not empty prevDto}">
-						<a href="${pageContext.request.contextPath}/bbs/article.do?${query}&num=${prevDto.num}">${prevDto.subject}</a>
+						<a href="${pageContext.request.contextPath}/nbbs/article.do?${query}&num=${preDto.num}">${prevDto.subject}</a>
 					</c:if>
 				</td>
 			</tr>
@@ -146,25 +156,50 @@ function updateOk() {
 				<td colspan="2">
 					다음글 : 
 					<c:if test="${not empty nextDto}">
-						<a href="${pageContext.request.contextPath}/bbs/article.do?${query}&num=${nextDto.num}">${nextDto.subject}</a>
+						<a href="${pageContext.request.contextPath}/nbbs/article.do?${query}&num=${nextDto.num}">${nextDto.subject}</a>
 					</c:if>
 				</td>
 			</tr>
 		<tbody>
-		
 	</table>
 	
 	<table class="table">
 		<tr>
 			<td width="50%">
-				<button type="button" class="btn" onclick="location.href='${pageContext.request.contextPath}/bbs/update.do?num=${dto.num}&page=${page}';">수정</button>
-				<button type="button" class="btn" onclick="deleteOk();">삭제</button>
+				<button type="button" class="btn" onclick="pwdInputModal('update');">수정</button>
+				<button type="button" class="btn" onclick="pwdInputModal('delete');">삭제</button>
 			</td>
 			<td align="right">
-				<button type="button" class="btn" onclick="location.href='${pageContext.request.contextPath}/bbs/list.do';">리스트</button>
+				<button type="button" class="btn" onclick="location.href='${pageContext.request.contextPath}/nbbs/list.do?${query}';">리스트</button>
 			</td>
 		</tr>
 	</table>
+</div>
+
+<div class="popup-wrap modal-container">
+	<div class="popup-content">
+		<div class="popup-header">
+			<h3 class="popup-title">패스워드</h3>
+			<button type="button" class="btn-popup btn-icon popup-close" > <i class="fa-solid fa-xmark"></i> </button>
+     		</div>
+		<div class="popup-body">
+			<h4 class="popup-body-title" style="text-align: center;">데이터 수정</h4>
+			<p style="text-align: center; padding: 15px 5px 15px; "> 게시글의 패스워드를 입력 하세요 </p>
+			
+			<form name="pwdForm" method="post" style="text-align: center;">
+				<input type="password" name="pwd" class="form-control" style="width: 250px;">
+				<input type="hidden" name="num" value="${dto.num}">
+				<input type="hidden" name="schType" value="${schType}">
+				<input type="hidden" name="kwd" value="${kwd}">
+				<input type="hidden" name="page" value="${page}">
+				<input type="hidden" name="mode">
+			</form>
+		</div>
+		<div class="popup-footer">
+			<button class="btn-popup popup-close modal-close">닫기</button>
+			<button class="btn-popup confirm modal-confirm">확인</button>
+		</div>
+	</div>
 </div>
 
 </body>
