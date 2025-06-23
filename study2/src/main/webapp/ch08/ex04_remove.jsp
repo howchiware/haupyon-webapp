@@ -1,6 +1,15 @@
 <%@ page contentType="text/html; charset=UTF-8"%>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
+
+<%
+	// 세션에 저장된 속성값 삭제
+	session.removeAttribute("name");
+	session.removeAttribute("age");
+	
+	// 세션에 저장된 모든 속성을 제거하고, 세션을 초기화
+	session.invalidate();
+%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -10,20 +19,9 @@
 </head>
 <body>
 
-	<h3>예제 프로그램</h3>
+	<h3>세션 정보 삭제</h3>
 	
-	<p>
-		<a href="${pageContext.request.contextPath}/score/list.do">성적 처리</a>
-	</p>
-
-	<p>
-		<a href="${pageContext.request.contextPath}/bbs/list.do">게시판</a>
-	</p>
-	
-	<p>
-		<a href="${pageContext.request.contextPath}/memo/list.do">메모장</a>
-	</p>
-	
+	<p><a href="ex04.jsp">돌아가기</a></p>
 
 </body>
 </html>

@@ -122,9 +122,31 @@ input[type=checkbox], input[type=radio] { vertical-align: middle; }
 }
 </style>
 
-<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/paginate.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/paging.js"></script>
+
+<c:url var="listUrl" value="/nbbs/list.do">
+	<c:if test="${not empty kwd}">
+		<c:param name="schType" value="${schType}" />
+		<c:param name="kwd" value="${kwd}" />
+	</c:if>
+</c:url>
 
 <script type="text/javascript">
+window.addEventListener('DOMContentLoaded', () => {
+	let page = ${page};
+	let pageSize = ${size};
+	let dataCount = ${dataCount};
+	let url = '${listUrl}'; // 문자라서 홑따옴표 필요
+	
+	let total_page = pageCount(dataCount, pageSize); // function pageCount()에 넘기기
+	let paging = pagingUrl(page, total_page, url); // function pagingUrl()에 넘기기
+	
+	document.querySelector('.dataCount').innerHTML = dataCount + '개 (' + page + '/' + total_page + ' 페이지)';
+	
+	document.querySelector('.page-navigation').innerHTML = dataCount === 0 ? '등록된 게시물이 없습니다.' : paging;
+});
+
+
 // 검색키워드 입력란에서 엔터를 누른경우 서버전송 막기
 window.addEventListener('DOMContentLoaded', () => {
 	const inputEL = document.querySelector('form input[name=kwd]');
@@ -169,7 +191,7 @@ function searchList() {
 
 	<table class="table">
 		<tr>
-			<td width="50%">${dataCount}개(${page}/${total_page} 페이지)</td>
+			<td width="50%"><span class="dataCount"></span></td>
 			<td align="right">&nbsp;</td>
 		</tr>
 	</table>
@@ -190,7 +212,15 @@ function searchList() {
 				<tr>
 					<td>${dataCount-(page-1)*size-status.index}</td>
 					<td>
-						<a href="#">${dto.subject}</a>
+						<c:url var="url" value="/nbbs/article.do">
+							<c:param name="num" value="${dto.num}" />
+							<c:param name="page" value="${page}" />
+							<c:if test="${not empty kwd}">
+								<c:param name="schType" value="${schType}" />
+								<c:param name="kwd" value="${kwd}" />
+							</c:if>
+						</c:url>
+						<a href="${url}">${dto.subject}</a>
 					</td>
 					<td>${dto.name}</td>
 					<td>${dto.reg_date}</td>
@@ -201,9 +231,7 @@ function searchList() {
 		
 	</table>
 	
-	<div class="page-navigation">
-		${dataCount == 0 ? "등록된 게시물이 없습니다." : paging}
-	</div>
+	<div class="page-navigation"></div>
 	
 	<table class="table">
 		<tr>

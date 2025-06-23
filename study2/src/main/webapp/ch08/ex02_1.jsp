@@ -1,6 +1,10 @@
 <%@ page contentType="text/html; charset=UTF-8"%>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
+
+<%
+	// 쿠키 설정
+%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -10,20 +14,14 @@
 </head>
 <body>
 
-	<h3>예제 프로그램</h3>
+	<h3>컴퓨터</h3>
+	<p>성능 우수</p>
+	<p>제조사: 삼싱</p>
+	<p>가격: 1,000,000</p>
 	
 	<p>
-		<a href="${pageContext.request.contextPath}/score/list.do">성적 처리</a>
+		<a href="ex02.jsp">돌아가기</a>
 	</p>
-
-	<p>
-		<a href="${pageContext.request.contextPath}/bbs/list.do">게시판</a>
-	</p>
-	
-	<p>
-		<a href="${pageContext.request.contextPath}/memo/list.do">메모장</a>
-	</p>
-	
 
 </body>
 </html>

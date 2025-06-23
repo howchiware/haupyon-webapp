@@ -10,18 +10,13 @@
 </head>
 <body>
 
-	<h3>예제 프로그램</h3>
+	<h3> session: 클라이언트 정보를 서버에 저장 </h3>
+	<!-- 세션은 일반적으로 로그인 처리 등에서 이용된다 -->
 	
 	<p>
-		<a href="${pageContext.request.contextPath}/score/list.do">성적 처리</a>
-	</p>
-
-	<p>
-		<a href="${pageContext.request.contextPath}/bbs/list.do">게시판</a>
-	</p>
-	
-	<p>
-		<a href="${pageContext.request.contextPath}/memo/list.do">메모장</a>
+		<a href="ex04_set.jsp">세션 설정</a> |
+		<a href="ex04_get.jsp">세션 확인</a> |
+		<a href="ex04_remove.jsp">세션 제거</a>
 	</p>
 	
 

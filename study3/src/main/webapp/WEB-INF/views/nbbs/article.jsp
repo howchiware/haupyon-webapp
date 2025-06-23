@@ -80,6 +80,24 @@ input[type=checkbox], input[type=radio] { vertical-align: middle; }
 
 .table-article { margin-top: 20px; }
 .table-article tr > td { padding-left: 5px; padding-right: 5px; }
+
+/* modal */
+.popup-panel { text-align: center; }
+.panel-info {
+	text-align: center; padding: 5px 5px 15px;
+	font-size: 13px;
+	font-weight: 500;
+	color: #707070;
+}
+.panel-message {
+	text-align: center; padding: 10px 5px 3px;
+	font-size: 10px;
+	font-weight: 500;
+	color: #FF5A5A;
+}
+
+.popup-panel input { width: 270px; }
+.popup-panel input::placeholder { padding: 3px; font-size: 13px; }
 </style>
 
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.7.2/css/all.css">
@@ -88,11 +106,14 @@ input[type=checkbox], input[type=radio] { vertical-align: middle; }
 
 <script type="text/javascript">
 function pwdInputModal(mode) {
-	const titleEL = document.querySelector('.popup-body-title');
+	
+	document.querySelector('.panel-message').innerHTML = ''; // 넣어놓지 않으면 패스워드가 틀린 이후 계속 오류 메시지가 출력된다
+	
+	const titleEL = document.querySelector('.popup-title');
 	if(mode === 'update') {
-		titleEL.textContent = '데이터 수정';
+		titleEL.textContent = '게시글 수정';
 	} else if( mode === 'delete') {
-		titleEL.textContent = '데이터 삭제';
+		titleEL.textContent = '게시글 삭제';
 	}
 	
 	const f = document.pwdForm;
@@ -101,12 +122,27 @@ function pwdInputModal(mode) {
 	modalOpen('.modal-container');
 }
 
-window.addEventListener('load', e => {
+window.addEventListener('DOMContentLoaded', e => {
+	
+	let auth = '${auth}';
+	if(auth === 'fail') {
+		document.querySelector('.panel-message').innerHTML = '게시글의 패스워드가 일치하지 않습니다.';
+		modalOpen('.modal-container');
+	}
+	
+	
 	const btnConfirm = document.querySelector('.modal-confirm');
 	btnConfirm.addEventListener('click', () => {
 		// 확인 버튼
+		const f = document.pwdForm;
+		if(! f.pwd.value.trim()) {
+			f.pwd.focus();
+			return false;
+		}
 		
-		modalClose('.modal-container');
+		f.action = '${pageContext.request.contextPath}/nbbs/pwd.do';
+		f.submit();
+		// modalClose('.modal-container');
 	});
 });
 </script>
@@ -160,6 +196,11 @@ window.addEventListener('load', e => {
 					</c:if>
 				</td>
 			</tr>
+			<tr style="border: none;">
+				<td colspan="2" align="right">
+					From : ${dto.ipAddr}
+				</td>
+			</tr>
 		<tbody>
 	</table>
 	
@@ -179,21 +220,24 @@ window.addEventListener('load', e => {
 <div class="popup-wrap modal-container">
 	<div class="popup-content">
 		<div class="popup-header">
-			<h3 class="popup-title">패스워드</h3>
+			<h3 class="popup-title">${mode=='update' ? '게시글 수정':'게시글 삭제'}</h3>
 			<button type="button" class="btn-popup btn-icon popup-close" > <i class="fa-solid fa-xmark"></i> </button>
-     		</div>
+     	</div>
 		<div class="popup-body">
-			<h4 class="popup-body-title" style="text-align: center;">데이터 수정</h4>
-			<p style="text-align: center; padding: 15px 5px 15px; "> 게시글의 패스워드를 입력 하세요 </p>
-			
-			<form name="pwdForm" method="post" style="text-align: center;">
-				<input type="password" name="pwd" class="form-control" style="width: 250px;">
-				<input type="hidden" name="num" value="${dto.num}">
-				<input type="hidden" name="schType" value="${schType}">
-				<input type="hidden" name="kwd" value="${kwd}">
-				<input type="hidden" name="page" value="${page}">
-				<input type="hidden" name="mode">
-			</form>
+			<div class="popup-panel">
+				<p class="panel-info"> 정보보호를 위해 게시글의 패스워드를 입력 하세요 </p>
+				
+				<form name="pwdForm" method="post">
+					<input type="password" name="pwd" class="form-control" placeholder="패스워드">
+					<input type="hidden" name="num" value="${dto.num}">
+					<input type="hidden" name="schType" value="${schType}">
+					<input type="hidden" name="kwd" value="${kwd}">
+					<input type="hidden" name="page" value="${page}">
+					<input type="hidden" name="mode" value="${mode}"> <!-- 수정인지 삭제인지 알기 위해서 -->
+				</form>
+				
+				<p class="panel-message">${message}</p>
+			</div>
 		</div>
 		<div class="popup-footer">
 			<button class="btn-popup popup-close modal-close">닫기</button>

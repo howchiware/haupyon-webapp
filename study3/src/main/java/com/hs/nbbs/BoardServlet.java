@@ -156,7 +156,7 @@ public class BoardServlet extends HttpServlet {
 
 	protected void writeSubmit(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		// 글등록
-		// 넘어온 파라미터 : name, subject, content, pwd
+		// 넘어온 파라미터(폼) : name, subject, content, pwd
 		BoardDAO dao = new BoardDAO();
 		
 		try {
@@ -251,24 +251,98 @@ public class BoardServlet extends HttpServlet {
 	}
 
 	protected void pwdSubmit(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		// 대화 상자로 작성하는 경우에는 AJAX를 이용해서 작성해야 한다. (안배움)
+		
 		// 패스워드 확인
-		// 넘어오는 파라미터 : num, pwd, page, mode, schType, kwd
+		// 넘어오는 파라미터(폼) : num, pwd, page, mode, schType, kwd
+		BoardDAO dao = new BoardDAO();
+		MyUtil util = new MyUtil();
+		
+		String page = req.getParameter("page");
+		String query = "page=" + page;
 		
 		try {
+			String schType = req.getParameter("schType");
+			String kwd = req.getParameter("kwd");
+			if(kwd.length() != 0) {
+				query += "&schType=" + schType + "&kwd=" 
+						+ util.encodeUrl(kwd);
+			}
+			
+			long num = Long.parseLong(req.getParameter("num"));
+			String pwd = req.getParameter("pwd");
+			String mode = req.getParameter("mode"); // "update" 또는 "delete" 
+
+			BoardDTO dto = dao.findById(num);
+			if(dto == null) {
+				viewPage(req, resp, "redirect:/nbbs/list.do?" + query);
+				return;
+			}
+			
+			if(! dto.getPwd().equals(pwd)) {
+				// 패스워드가 일치하지 않으면
+				
+				dto.setContent(dto.getContent().replaceAll("\n", "<br>"));
+				
+				BoardDTO prevDto = dao.findByPrev(num, schType, kwd);
+				BoardDTO nextDto = dao.findByNext(num, schType, kwd);
+				
+				req.setAttribute("dto", dto);
+				req.setAttribute("prevDto", prevDto);
+				req.setAttribute("nextDto", nextDto);
+				
+				req.setAttribute("page", page);
+				req.setAttribute("schType", schType);
+				req.setAttribute("kwd", kwd);
+				req.setAttribute("query", query);
+				
+				req.setAttribute("mode", mode);
+				req.setAttribute("auth", "fail");
+				
+				viewPage(req, resp, "nbbs/article");
+				
+				return;
+			}
+			
+			if(mode.equals("update")) {
+				// 수정할 때는 포워딩해서 넘어가야 한다
+				req.setAttribute("dto", dto);
+				req.setAttribute("mode", "update");
+				req.setAttribute("page", page);
+				req.setAttribute("schType", schType);
+				req.setAttribute("kwd", kwd);
+				
+				viewPage(req, resp, "nbbs/write");
+				return;
+			} else if (mode.equals("delete")) {
+				dao.deleteBoard(num);
+			}
 			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
+		viewPage(req, resp, "redirect:/nbbs/list.do?" + query);
+		
 	}
 
 	protected void updateSubmit(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		// 글수정완료
-		// 넘어오는 파라미터(폼데이터) : name,subject,content,pwd,num,page
+		// 넘어오는 파라미터(폼)
+		//   : name, subject, content, pwd, num, page, schType, kwd
 		BoardDAO dao = new BoardDAO();
-		String page = req.getParameter("page");
+		MyUtil util = new MyUtil();
 		
+		String page = req.getParameter("page");
+		String query = "page=" + page;
 		try {
+			String schType = req.getParameter("schType");
+			String kwd = req.getParameter("kwd");
+			if(kwd.length() != 0) {
+				query += "&schType=" + schType + "&kwd=" 
+						+ util.encodeUrl(kwd);
+			}
+			
 			BoardDTO dto = new BoardDTO();
 			
 			dto.setNum(Long.parseLong(req.getParameter("num")));
@@ -278,12 +352,11 @@ public class BoardServlet extends HttpServlet {
 			dto.setPwd(req.getParameter("pwd"));
 			
 			dao.updateBoard(dto);
-			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
 		// 수정 완료후 리스트로 리다이렉트
-		viewPage(req, resp, "redirect:/nbbs/list.do?page=" + page);
+		viewPage(req, resp, "redirect:/nbbs/list.do?" + query);
 	}
 }

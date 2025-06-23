@@ -41,7 +41,7 @@ function pagingUrl(current_page, total_page, url) {
         
         url += url.includes('?') ? '&' : '?';
         
-        currentPageSetup = Math.floor(current_page / numPerBlock) * numPerBlock;
+        currentPageSetup = Math.floor(current_page / numPerBlock) * numPerBlock; // 자바스크립트는 실수가 나와서 floor로 정수로 바꿔줘야 한다
         if(current_page%numPerBlock === 0) {
         	currentPageSetup = currentPageSetup - numPerBlock;
         }

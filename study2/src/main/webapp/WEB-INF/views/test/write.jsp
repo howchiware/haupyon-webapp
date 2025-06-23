@@ -10,19 +10,13 @@
 </head>
 <body>
 
-	<h3>예제 프로그램</h3>
-	
-	<p>
-		<a href="${pageContext.request.contextPath}/score/list.do">성적 처리</a>
-	</p>
-
-	<p>
-		<a href="${pageContext.request.contextPath}/bbs/list.do">게시판</a>
-	</p>
-	
-	<p>
-		<a href="${pageContext.request.contextPath}/memo/list.do">메모장</a>
-	</p>
+	<form action="${pageContext.request.contextPath}/testFile/write.do" method="post" enctype="multipart/form-data">
+		<p>제목: <input type="text" name="subject"></p>
+		<p>파일: <input type="file" name="selectFile"></p>
+		<p>
+			<button type="submit">확인</button>
+		</p>
+	</form>
 	
 
 </body>

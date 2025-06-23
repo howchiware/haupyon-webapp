@@ -1,0 +1,15 @@
+CREATE table memo (
+    num NUMBER NOT NULL,
+    memo_date DATE NOT NULL,
+    content VARCHAR2(4000) NOT NULL,
+    reg_date DATE DEFAULT SYSDATE,
+    PRIMARY KEY(num)
+);
+
+-- 시퀀스 작성
+CREATE SEQUENCE memo_seq
+INCREMENT BY 1
+START WITH 1
+NOMAXVALUE
+NOCYCLE
+NOCACHE;

@@ -104,7 +104,7 @@ public class BoardServlet extends HttpServlet {
 			}
 			
 			// kwd = URLDecoder.decode(kwd, "utf-8"); // %를 검색하면 에러가 발생할 수 있다
-			kwd = util.decodeUrl(kwd); // GET 방식일 떄의 문제
+			kwd = util.decodeUrl(kwd); // GET 방식일 때의 문제
 			
 			// 전체 데이터 개수
 			int dataCount;

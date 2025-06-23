@@ -1,6 +1,12 @@
 <%@ page contentType="text/html; charset=UTF-8"%>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
+<% 
+	request.setCharacterEncoding("utf-8");
+
+	String subject = request.getParameter("subject");
+	String selectFile = request.getParameter("selectFile");
+%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -10,20 +16,11 @@
 </head>
 <body>
 
-	<h3>예제 프로그램</h3>
+	<h3>요청 받은 정보</h3>
 	
-	<p>
-		<a href="${pageContext.request.contextPath}/score/list.do">성적 처리</a>
-	</p>
+	<p> subject: <%= subject %> </p>
+	<p> selectFile: <%= selectFile %> </p>
 
-	<p>
-		<a href="${pageContext.request.contextPath}/bbs/list.do">게시판</a>
-	</p>
-	
-	<p>
-		<a href="${pageContext.request.contextPath}/memo/list.do">메모장</a>
-	</p>
-	
 
 </body>
 </html>

@@ -161,9 +161,11 @@ function sendOk() {
 					<button type="button" class="btn" onclick="sendOk();">${mode=="update" ? "수정완료" : "등록완료"}</button>
 					<button type="reset" class="btn">다시입력</button>
 					<button type="button" class="btn" onclick="location.href='${pageContext.request.contextPath}/nbbs/list.do';">${mode=="update" ? "수정취소" : "등록취소"}</button>
-					<c:if test="${mode=='update'}">
+					<c:if test="${mode=='update'}"> <!-- 검색하고 수정했을 때 검색이 풀리지 않기 위함 ?? POST로 넘기니까 decode 하지 않아도 된다-->
 						<input type="hidden" name="num" value="${dto.num}">
 						<input type="hidden" name="page" value="${page}">
+						<input type="hidden" name="schType" value="${schType}">
+						<input type="hidden" name="kwd" value="${kwd}">
 					</c:if>
 				</td>
 			</tr>
