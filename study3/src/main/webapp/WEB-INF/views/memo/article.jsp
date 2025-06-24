@@ -67,6 +67,14 @@
 	border-radius: 15px;
 	padding: 5px 5px;
 }
+/* 
+.content {
+	width: 660px;
+}
+
+.table-date {
+	width: 430px;
+} */
 </style>
 
 <script type="text/javascript">
@@ -108,7 +116,7 @@ function deleteOk() {
 						</td>
 					</tr>					
 					<tr>
-						<td class="table-td">
+						<td class="table-td content">
 							${dto.content}
 						</td>
 					</tr>

@@ -28,11 +28,15 @@
 	border: 1px solid black;
 	border-radius: 20px;
 	margin: 15px auto;
+	background: #e9fbe9;
 }
 
 .container .memo-box input[name=content] {
 	width: 600px;
 	height: 400px;
+	border: 1px solid black;
+	border-radius: 50px;
+	text-align: center;
 }
 
 .btnDisplay {
@@ -49,8 +53,10 @@
 }
 
 .tdDisplay {
-	align-items: center;
+	text-align: center;
 }
+
+
 
 </style>
 

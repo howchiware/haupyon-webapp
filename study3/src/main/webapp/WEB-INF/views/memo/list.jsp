@@ -40,6 +40,7 @@ body {
 	border-radius: 20px;
 }
 
+
 .table a {
 	text-decoration: none;
 	color: inherit;
@@ -57,6 +58,14 @@ body {
 	font-size: 18px;	
 	font-weight: 500;
 	color: #474747;
+}
+
+.container .table .first a {
+	display: inline-block;
+	width: 650px;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow: hidden;
 }
 
 .container .table .first:hover {
