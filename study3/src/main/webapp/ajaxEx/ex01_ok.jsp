@@ -13,10 +13,10 @@
 	String s = "";
 	
 	switch(oper) {
-	case "+" : s += String.format("%d + %d = %d", n1, n2, n1+n2); break;
-	case "-" : s += String.format("%d - %d = %d", n1, n2, n1-n2); break;
-	case "*" : s += String.format("%d * %d = %d", n1, n2, n1*n2); break;
-	case "/" : s += String.format("%d / %d = %d", n1, n2, n1/n2); break;
+	case "+" : s = String.format("%d + %d = %d", n1, n2, n1+n2); break;
+	case "-" : s = String.format("%d - %d = %d", n1, n2, n1-n2); break;
+	case "*" : s = String.format("%d * %d = %d", n1, n2, n1*n2); break;
+	case "/" : s = String.format("%d / %d = %d", n1, n2, n1/n2); break;
 	}
 	
 	

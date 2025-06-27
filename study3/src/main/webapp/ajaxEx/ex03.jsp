@@ -10,7 +10,7 @@
 </head>
 <body>
 
-	<h3>AJAX - GET</h3>
+	<h3>AJAX - POST</h3>
 
 	<form name="myForm">
 		<input type="text" name="num1" id="num1">
@@ -49,7 +49,7 @@
 			
 			let params = 'num1=' + n1 + '&num2=' + n2 + '&oper=' + op;
 			
-			let url = 'ex02_ok.jsp?' + params;			
+			let url = 'ex03_ok.jsp';			
 			
 			// AJAX 객체 생성
 			httpReq = createXMLHttpRequest();
@@ -58,10 +58,13 @@
 			httpReq.onreadystatechange = callback;
 			
 			// open - AJAX 요청의 형식을 설정
-			httpReq.open('GET', url, true); // true: 비동기 통신
+			httpReq.open('POST', url, true); // true: 비동기 통신
+			
+			// Content-Type 명시: POST에서는 필수
+			httpReq.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 			
 			// send
-			httpReq.send(null); // send(내용)
+			httpReq.send(params); // send(내용)
 			
 		}
 		
